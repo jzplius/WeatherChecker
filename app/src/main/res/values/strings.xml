@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Weather Checker</string>
+    <string name="error_city_name_empty">Please enter city name!</string>
+    <string name="error_couldnt_download">Wrong input / response data!</string>
+
+    <string name="please_retry">Please Retry</string>
+    <string name="retry">Retry</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="error_no_network">Please check network connection!</string>
+    <string name="enter_city_name">ENTER CITY NAME</string>
+    <string name="view_history">VIEW HISTORY</string>
+    <string name="celcius_sign">°</string>
+</resources>

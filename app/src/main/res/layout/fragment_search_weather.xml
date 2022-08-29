@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.weather.checker.ui.main.cart.ShoppingCartViewModel" />
+
+        <variable
+            name="cardAttribute"
+            type="com.weather.checker.ui.main.cart.ShoppingCartViewModel.CardAttribute" />
+        <!-- NOTE: for some reason unable to declare "coloringType" variable (2nd enum
+        class in single <data> block in layout) - using workaround -->
+<!--        <variable-->
+<!--            name="coloringType"-->
+<!--            type="com.weathercards.app.ui.main.cart.ShoppingCartViewModel.ColoringType" />-->
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_bg"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:padding="24dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView_back"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="24dp"
+            android:background="@android:color/transparent"
+            android:inputType="textCapCharacters"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/imageView_logo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitEnd"
+            app:layout_constraintBottom_toTopOf="@+id/textInputLayout_location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.8"
+            app:srcCompat="@drawable/logo" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout_location"
+            style="?attr/textInputFilledDenseStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="4dp"
+            android:hint="@string/enter_city_name"
+            android:textColorHint="@color/input_text_hint"
+            app:boxBackgroundColor="@color/white"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="true"
+            app:errorEnabled="false"
+            app:hintTextColor="@color/input_text_hint"
+            app:layout_constraintBottom_toTopOf="@+id/button_history"
+            app:layout_constraintEnd_toStartOf="@id/button_search"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_logo"
+            app:shapeAppearanceOverlay="@style/ThemeOverlay.ShapeCornerSize.Medium">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditText_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/input_text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/button_search"
+            style="@style/ImageButton.MyApp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="24dp"
+            android:inputType="textCapCharacters"
+            android:onClick="@{() -> viewModel.onSearchClicked()}"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout_location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline_input_text_search_button_separator"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_logo" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_history"
+            style="@style/Button.MyApp"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/view_history"
+            android:textAppearance="?textAppearanceBodyLarge"
+            app:cornerRadius="12dp"
+            app:layout_constraintBottom_toTopOf="@+id/frameLayout_weather_card"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout_location"
+            app:layout_constraintWidth_percent="0.55" />
+
+        <FrameLayout
+            android:id="@+id/frameLayout_weather_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="89dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_history"
+            tools:layout_editor_absoluteX="24dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardView_weather_card"
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="@{viewModel.dataAvailable ? View.VISIBLE : View.INVISIBLE}"
+                app:cardBackgroundColor="@color/input_text_transparent_hint"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:contentPaddingRight="16dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imageView_weather_icon"
+                        android:layout_width="54dp"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintDimensionRatio="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:imageScr="@{viewModel.weather.iconPath}" />
+
+                    <TextView
+                        android:id="@+id/textView_weather_description"
+                        style="@style/CardViewText.MyApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.weather.description}"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        app:layout_constraintBottom_toTopOf="@+id/imageView_weather_icon"
+                        app:layout_constraintStart_toEndOf="@id/imageView_weather_icon"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView_weather_icon" />
+
+                    <!-- NOTE: for some reason unable to declare "coloringType" variable (2nd enum
+        class in single <data> block in layout) - using workaround -->
+                    <TextView
+                        android:id="@+id/textView_temperature_main"
+                        style="@style/CardViewText.MyApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="54dp"
+                        android:layout_marginTop="8dp"
+                        android:includeFontPadding="false"
+                        android:lineSpacingExtra="0dp"
+                        android:padding="0dp"
+                        android:text="@{String.valueOf(viewModel.weather.temperature)}"
+                        android:textAppearance="@style/TextAppearance.MyApp.DisplayExtraLarge"
+                        android:tag="@{String.valueOf(viewModel.weather.coloringType)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView_location"
+                        app:layout_constraintEnd_toStartOf="@id/textView_temperature_celcius"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/imageView_weather_icon"
+                        app:pickTextColor="@{cardAttribute.TEMPERATURE}"/>
+
+                    <TextView
+                        android:id="@+id/textView_temperature_celcius"
+                        style="@style/CardViewTextLight.MyApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="24dp"
+                        android:includeFontPadding="false"
+                        android:lineSpacingExtra="0dp"
+                        android:padding="0dp"
+                        android:text="@string/celcius_sign"
+                        android:textAppearance="@style/TextAppearance.MyApp.DisplayLargeLight"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/textView_temperature_main"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:tag="@{String.valueOf(viewModel.weather.coloringType)}"
+                        app:pickTextColor="@{cardAttribute.TEMPERATURE}" />
+
+                    <TextView
+                        android:id="@+id/textView_location"
+                        style="@style/CardViewText.MyApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="@{viewModel.weather.location}"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:tag="@{String.valueOf(viewModel.weather.coloringType)}"
+                        app:pickTextColor="@{cardAttribute.LOCATION}"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView_search_week_day"
+                        style="@style/CardViewText.MyApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="32dp"
+                        android:text="@{viewModel.weather.weekdayName}"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView_search_month_day"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:tag="@{String.valueOf(viewModel.weather.coloringType)}"
+                        app:pickTextColor="@{cardAttribute.DATE}" />
+
+                    <TextView
+                        android:id="@+id/textView_search_month_day"
+                        style="@style/CardViewText.MyApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="@{viewModel.weather.monthDay}"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/textView_search_week_day"
+                        app:layout_constraintStart_toEndOf="parent"
+                        android:tag="@{String.valueOf(viewModel.weather.coloringType)}"
+                        app:pickTextColor="@{cardAttribute.DATE}" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/circularProgressIndicator_weather_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
+                app:indicatorColor="@color/input_text_hint" />
+
+        </FrameLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_input_text_search_button_separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.8" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_above_navigation_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="34dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
